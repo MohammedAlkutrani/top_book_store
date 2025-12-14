@@ -23,4 +23,7 @@ public function author()
     }
     ```
     
-
+```
+php artisan make:migration create_book_author_table
+```
+this command for declaring many to many table only will create migration
