@@ -23,4 +23,9 @@ class Cart extends Model
     {
         return $this->belongsTo(PaymentMethod::class);
     }
+
+    public function items()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }
