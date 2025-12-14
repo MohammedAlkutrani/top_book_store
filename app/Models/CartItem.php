@@ -11,4 +11,15 @@ class CartItem extends Model
         'book_id',
         'qty',
     ];
+
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
+    }
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
+
 }
