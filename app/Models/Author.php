@@ -8,6 +8,7 @@ class Author extends Model
 {
     protected $fillable = [
         'bio',
-        'country'
+        'country',
+        'user_id'
     ];
 }

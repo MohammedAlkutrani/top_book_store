@@ -22,7 +22,8 @@ class User extends Authenticatable
         'name',
         'username',
         'password',
-        'type'
+        'type',
+        'status'
     ];
 
     /**
@@ -61,5 +62,12 @@ class User extends Authenticatable
     public function books()
     {
         return $this->belongsToMany(Book::class);
+    }
+
+
+    public function approve()
+    {
+        $this->status = 'approve';
+        $this->save();
     }
 }

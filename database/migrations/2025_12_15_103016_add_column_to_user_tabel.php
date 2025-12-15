@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('authors', function (Blueprint $table) {
-            $table->id();
-            $table->text('bio');
-            $table->string('country');
-            $table->integer('user_id');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('status')->default('approve');
         });
     }
 
@@ -25,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('authors');
+        Schema::table('users', function (Blueprint $table) {
+            //
+        });
     }
 };

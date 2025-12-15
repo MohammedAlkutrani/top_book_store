@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Author;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
@@ -12,7 +15,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $user = Auth::user();
+        return User::findOrFail($user->id)->load('books');
     }
 
     /**
@@ -20,7 +24,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
     }
 
     /**

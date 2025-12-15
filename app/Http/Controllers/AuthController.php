@@ -15,6 +15,9 @@ class AuthController extends Controller
             'password'=>['required','min:8']
         ]);
 
+
+
+
         $user = User::where('username',$inputs['username'])->first();
 
         if(!$user || !Hash::check($inputs['password'],$user->password)){
