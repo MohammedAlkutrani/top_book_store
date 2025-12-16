@@ -22,4 +22,9 @@ class CartItem extends Model
         return $this->belongsTo(Book::class);
     }
 
+    public function totalItem()
+    {
+        return $this->book->price * $this->qty;
+    }
+
 }

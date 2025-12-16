@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Customer\CartResource;
 use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,29 +17,41 @@ class CartController extends Controller
      */
     public function index()
     {
-        $cart = Cart::where('user_id',Auth::id())->first()->load('items');
-        return $cart;
+        $cart = Cart::where('user_id', Auth::id())->first();
+
+        return new CartResource($cart);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request,$book_id)
+    public function store(Request $request, $book_id)
     {
         $user = Auth::user();
 
         // if user not have a cart
-        $cart = Cart::where('user_id',$user->id)->firstOrCreate([
-            'user_id'=>$user->id,
+        $cart = Cart::where('user_id', $user->id)->firstOrCreate([
+            'user_id' => $user->id,
             'payment_method_id' => PaymentMethod::first()->id,
-            'address'=>$user->customer->address
+            'address' => $user->customer->address
         ]);
 
-        // add item to the cart
-        $cart->items()->create([
-            'book_id'=>$book_id,
-            'qty' =>1
-        ]);
+
+        $cartItem = CartItem::where('cart_id', $cart->id)->where('book_id', $book_id)->first();
+
+        if ($cartItem) {
+            $cartItem->update([
+                'qty' => $cartItem->qty + 1
+            ]);
+        } else {
+            // add item to the cart
+            $cart->items()->create([
+                'book_id' => $book_id,
+                'qty' => 1
+            ]);
+        }
+
+
 
         return response()->json([
             'message' => 'item added'

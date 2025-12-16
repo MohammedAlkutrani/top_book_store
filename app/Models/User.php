@@ -72,6 +72,15 @@ class User extends Authenticatable
     }
 
 
+    public function getStatusAttribute($value)
+    {
+        if($value == 'approve')
+        {
+            return 'تم القبول';
+        }
+        return $value;
+    }
+
     public function translateStatus()
     {
         if($this->status == 'approve')

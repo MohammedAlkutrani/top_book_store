@@ -28,4 +28,13 @@ class Cart extends Model
     {
         return $this->hasMany(CartItem::class);
     }
+
+    public function totalCart()
+    {
+        $total = 0;
+        foreach($this->items as $item){
+            $total = $total + $item->totalItem();
+        }
+        return $total;
+    }
 }
