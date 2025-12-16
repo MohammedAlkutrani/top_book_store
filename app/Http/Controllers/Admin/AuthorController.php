@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Admin\AuthorResource;
+use App\Http\Resources\Admin\AuthroResource;
 use App\Models\Author;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +16,6 @@ class AuthorController extends Controller
      */
     public function index(Request $request)
     {
-
         // prepare query
         $authorQuery = User::query();
 
@@ -24,10 +25,10 @@ class AuthorController extends Controller
             $authorQuery->where('status', $request->status);
         }
         $authors = $authorQuery->with('author')->get();
-
         // ->with(relationName) query
         // ->load(relationName) collection
-        return $authors;
+        // return $authors;
+        return AuthorResource::collection($authors);
     }
 
     public function approve($user_id)

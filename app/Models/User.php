@@ -70,4 +70,14 @@ class User extends Authenticatable
         $this->status = 'approve';
         $this->save();
     }
+
+
+    public function translateStatus()
+    {
+        if($this->status == 'approve')
+        {
+            return 'تم القبول';
+        }
+        return $this->status;
+    }
 }
