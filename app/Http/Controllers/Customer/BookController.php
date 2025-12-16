@@ -1,22 +1,26 @@
 <?php
 
-namespace App\Http\Controllers\Author;
+namespace App\Http\Controllers\Customer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Book;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class BookController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
-        return User::findOrFail($user->id)->load('books');
+        $booksQuery = Book::query();
+
+        if($request->has('cat'))
+        {
+            $booksQuery->where('category_id',$request->cat);
+        }
+
+        return $booksQuery->get();
     }
 
     /**
@@ -24,19 +28,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $inputs = $request->validate([
-            'title' => ['required','max:255'],
-            'publish_year' => ['required','min:4','max:4'],
-            'price' => ['required','decimal:1,50'],
-            'isbn' => ['required'],
-            'category_id' => ['required','exists:categories,id'],
-        ]);
-
-        $user = Auth::user();
-        $book = Book::create($inputs);
-        $user->books()->attach($book->id);
-
-        return $book;
+        //
     }
 
     /**

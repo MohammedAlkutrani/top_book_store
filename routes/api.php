@@ -5,6 +5,11 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Author\AuthController as AuthorAuthController;
 use App\Http\Controllers\Author\BookController;
+use App\Http\Controllers\Author\CategoryController as AuthorCategoryController;
+use App\Http\Controllers\Customer\AuthController as CustomerAuthController;
+use App\Http\Controllers\Customer\BookController as CustomerBookController;
+use App\Http\Controllers\Customer\CartController;
+use App\Http\Controllers\Customer\CategoryController as CustomerCategoryController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\AuthorMiddleware;
 use App\Http\Middleware\CustomerMiddleware;
@@ -12,22 +17,9 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+
 
 Route::post('/login',[AuthController::class,'login']);
-
-
-Route::get('customer/test',function(){
-    return 'im customer';
-})->middleware(['auth:sanctum',CustomerMiddleware::class]);
-
-
-Route::get('admin/test',function(){
-    return 'im admin';
-})->middleware(['auth:sanctum',AdminMiddleware::class]);
-
 
 Route::prefix('admin')->middleware(['auth:sanctum',AdminMiddleware::class])->group(function(){
     Route::apiResource('category',CategoryController::class);
@@ -36,11 +28,22 @@ Route::prefix('admin')->middleware(['auth:sanctum',AdminMiddleware::class])->gro
 });
 
 
-Route::prefix('author')->middleware(['auth:sanctum',AuthorMiddleware::class])->group(function(){
-    Route::apiResource('book',BookController::class);
-
+Route::post('customer/sign-up',[CustomerAuthController::class,'signup']);
+Route::prefix('customer')->middleware(['auth:sanctum',CustomerMiddleware::class])->group(function(){
+    Route::apiResource('book',CustomerBookController::class)->only(['index','show']);
+    Route::apiResource('category',CustomerCategoryController::class)->only('index');
+    Route::apiResource('cart',CartController::class)->except('store');
+    Route::post('cart/{book}',[CartController::class,'store']);
 });
 
- Route::post('author/sign-up',[AuthorAuthController::class,'signup']);
+Route::post('author/sign-up',[AuthorAuthController::class,'signup']);
+Route::prefix('author')->middleware(['auth:sanctum',AuthorMiddleware::class])->group(function(){
+    Route::apiResource('book',BookController::class);
+    Route::apiResource('category',AuthorCategoryController::class)->only('index');
+});
+
+
+
+
 
 

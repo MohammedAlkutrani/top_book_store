@@ -14,6 +14,7 @@ class AuthorController extends Controller
      */
     public function index(Request $request)
     {
+
         // prepare query
         $authorQuery = User::query();
 
